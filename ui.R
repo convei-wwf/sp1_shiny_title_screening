@@ -8,11 +8,11 @@ ui <- navbarPage(
     ### Sidebar with a DT::datatable of the entire bib set?
     fluidRow(
       column(width = 3,
-        h5('Choose a bibliography file:'),
+        h5('Choose a .ris bibliography file:'),
         shinyFilesButton('bib_file', 'File select', 'Please select a file', FALSE),
         
         
-        h5('Choose or create file for screened results:'),
+        h5('Choose .ris file for screened results (create empty .ris file to begin):'),
         shinyFilesButton('screened_file', 'File select', 'Please select a file', FALSE),
         
         
@@ -53,24 +53,26 @@ ui <- navbarPage(
         includeMarkdown('criteria_short.md'),
 
         ### Radio buttons for categorization
-        radioButtons(
+        checkboxGroupInput(
           inputId = 'screen_decision',
-          label = 'Benchmark paper according to title?:',
-          choices = c('Definitely in scope',
-                      'Earth Observation context',
-                      'Applied Science context',
-                      'Not in scope'),
+          label = 'Criteria according to title?:',
+          choices = c('Explicit valuation' = "A",
+                      'Earth Observation context' = 'B',
+                      'Societal value context' = 'C',
+                      'Spurious/no criteria met' = 'D',
+                      'Uncertain how to classify' = 'E'),
           selected = character(0)
-          ), ### end of radio buttons
-        ### * Append record to an output bibtex file with categorization in extra field
-        actionButton(
-          inputId = 'reveal_abstr',
-          label = 'Reveal abstract?'
-        ),
+          ), ### end of checkboxGroupInput
+        ### * Append record to an output file with categorization in extra field
+        # actionButton(
+        #   inputId = 'reveal_abstr',
+        #   label = 'Reveal abstract?'
+        # ),
         actionButton(
           inputId = 'screen_action',
           label = 'Log it!'
         ),
+        hr(),
         actionButton(
           inputId = 'skip_doc',
           label = 'Skip document!'
