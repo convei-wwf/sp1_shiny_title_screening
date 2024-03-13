@@ -76,6 +76,10 @@ ui <- navbarPage(
         actionButton(
           inputId = 'skip_doc',
           label = 'Skip document!'
+        ),
+        actionButton(
+          inputId = 'shuffle',
+          label = 'Shuffle the docs!'
         )
       ), ### end sidebar panel
 

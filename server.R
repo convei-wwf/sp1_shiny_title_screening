@@ -53,7 +53,7 @@ server <- shinyServer(function(input, output) {
   ###################################
   
   observeEvent(input$skip_doc, {
-    message('in doc eventReactive')
+    message('in skip_doc observeEvent')
     ### update the checkbox input to blank out selections
     updateRadioButtons(inputId = 'screen_decision', selected = character(0))
     ### drop the current first row from the bib_toscreen
@@ -63,6 +63,14 @@ server <- shinyServer(function(input, output) {
     v$current_doc <- v$bib_toscreen %>%
       slice(1)
   })
+  
+  observeEvent(input$shuffle, {
+    message('in shuffle observeEvent')
+    v$bib_toscreen <- slice_sample(v$bib_toscreen, prop = 1, replace = FALSE)
+    v$current_doc <- v$bib_toscreen %>%
+      slice(1)
+  })
+  
   
   observeEvent(input$screen_action, {
     message('in screen_action observeEvent')
