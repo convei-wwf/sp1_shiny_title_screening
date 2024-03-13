@@ -63,11 +63,11 @@ ui <- navbarPage(
                       'Uncertain how to classify' = 'E'),
           selected = character(0)
           ), ### end of checkboxGroupInput
-        ### * Append record to an output file with categorization in extra field
-        # actionButton(
-        #   inputId = 'reveal_abstr',
-        #   label = 'Reveal abstract?'
-        # ),
+        textInput(
+          inputId = 'notes',
+          label = 'Notes:',
+          value = ''
+        ),
         actionButton(
           inputId = 'screen_action',
           label = 'Log it!'

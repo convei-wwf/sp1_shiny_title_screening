@@ -83,7 +83,7 @@ server <- shinyServer(function(input, output) {
       return(NULL)
     }
     ### Translate current doc to RIS and add in a PA (personal note) field with the screening decision
-    append_decision(v$current_doc, input$screen_decision, input$screened_file, roots)
+    append_decision(v$current_doc, input$screen_decision, input$notes, input$screened_file, roots)
 
     ### update the checkbox input to blank out selections
     updateRadioButtons(inputId = 'screen_decision', selected = character(0))
@@ -96,16 +96,16 @@ server <- shinyServer(function(input, output) {
   })
   
   output$doc_fields_text <- renderUI({
+    # browser()
     ### output to display selected doc for screening: highlight search terms in title and abstract
     title <- v$current_doc$title %>% str_to_sentence() %>% str_remove_all('\\{|\\}')
     title_out <- embolden(text = title) %>%
       str_replace_all('p>', 'h3>') ### turn into a header instead of paragraph
-    
+
     author <- v$current$author %>% str_to_title() %>% markdown()
     journal <- v$current_doc$journal %>% str_to_title() %>% markdown()
-    abstract <- v$current_doc$abstract %>% markdown()
+    abstract <- embolden(text = v$current_doc$abstract)
     html_out <- paste(title_out, '<hr>', author, journal, '<hr>', abstract)
-    # html_out <- paste(title_out, '<hr>', authors, journal)
     return(HTML(html_out))
   })
   
