@@ -11,10 +11,8 @@ ui <- navbarPage(
         h5('Choose a .ris bibliography file:'),
         shinyFilesButton('bib_file', 'File select', 'Please select a file', FALSE),
         
-        
-        h5('Choose .ris file for screened results (create empty .ris file to begin):'),
+        h5('Choose .ris file for screened results (to start, rename screened_blank.ris with your initials):'),
         shinyFilesButton('screened_file', 'File select', 'Please select a file', FALSE),
-        
         
         h5('Remove already-screened results from bibliography:'),
         actionButton(
