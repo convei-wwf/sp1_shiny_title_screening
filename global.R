@@ -100,3 +100,19 @@ embolden <- function(text, terms = search_terms) {
   return(text_out)
 }
 
+combine_screened <- function(df, files) {
+  for(f in files) {
+    col_name <- basename(f) %>% str_remove_all('.ris')
+    comment_name <- paste0('comments_', str_remove(col_name, '.+_'))
+    
+    screened <- read_refs(f) %>%
+      rename(!!col_name := sequence_data, 
+             !!comment_name := comments)
+    df <- left_join(df, screened)
+  }
+  df_out <- df %>%
+    pivot_longer(names_to = 'name', values_to = 'val', cols = contains(c('screen', 'comment'))) %>%
+    filter(!is.na(val)) %>%
+    pivot_wider(names_from = 'name', values_from = 'val')
+  return(df_out)
+}

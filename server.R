@@ -54,8 +54,9 @@ server <- shinyServer(function(input, output) {
   
   observeEvent(input$skip_doc, {
     message('in skip_doc observeEvent')
-    ### update the checkbox input to blank out selections
-    updateRadioButtons(inputId = 'screen_decision', selected = character(0))
+    ### update the checkbox input and text input to blank out selections
+    updateCheckboxGroupInput(inputId = 'screen_decision', selected = character(0))
+    updateTextInput(inputId = 'notes', value = '')
     ### drop the current first row from the bib_toscreen
     v$bib_toscreen <- v$bib_toscreen %>%
       slice(-1)
@@ -66,6 +67,10 @@ server <- shinyServer(function(input, output) {
   
   observeEvent(input$shuffle, {
     message('in shuffle observeEvent')
+    ### update the checkbox input and text input to blank out selections
+    updateCheckboxGroupInput(inputId = 'screen_decision', selected = character(0))
+    updateTextInput(inputId = 'notes', value = '')
+
     v$bib_toscreen <- slice_sample(v$bib_toscreen, prop = 1, replace = FALSE)
     v$current_doc <- v$bib_toscreen %>%
       slice(1)
@@ -85,8 +90,9 @@ server <- shinyServer(function(input, output) {
     ### Translate current doc to RIS and add in a PA (personal note) field with the screening decision
     append_decision(v$current_doc, input$screen_decision, input$notes, input$screened_file, roots)
 
-    ### update the checkbox input to blank out selections
-    updateRadioButtons(inputId = 'screen_decision', selected = character(0))
+    ### update the checkbox input and text input to blank out selections
+    updateCheckboxGroupInput(inputId = 'screen_decision', selected = character(0))
+    updateTextInput(inputId = 'notes', value = '')
     ### drop the current first row from the bib_toscreen
     v$bib_toscreen <- v$bib_toscreen %>%
       slice(-1)
