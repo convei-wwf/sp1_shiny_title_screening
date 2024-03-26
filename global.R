@@ -111,8 +111,28 @@ combine_screened <- function(df, files) {
     df <- left_join(df, screened)
   }
   df_out <- df %>%
-    pivot_longer(names_to = 'name', values_to = 'val', cols = contains(c('screen', 'comment'))) %>%
+    pivot_longer(names_to = 'name', values_to = 'val', 
+                 cols = contains(c('screen', 'comment'))) %>%
     filter(!is.na(val)) %>%
     pivot_wider(names_from = 'name', values_from = 'val')
   return(df_out)
 }
+
+all_df <- read_refs(here('_data/title_screen_sample1000.ris'))
+screened_fs <- list.files(here('_data'), pattern = 'screened_', full.names = TRUE)
+screened_df <- combine_screened(all_df, screened_fs)
+
+screened_df %>%
+  filter(!is.na(screened_cco2) & !is.na(screened_mbs)) %>%
+  select(screened_cco2, screened_mbs) %>%
+  table()
+
+screened_df %>%
+  filter(!is.na(screened_cco2) & !is.na(screened_sc)) %>%
+  select(screened_cco2, screened_sc) %>%
+  table()
+
+screened_df %>%
+  filter(!is.na(screened_sc) & !is.na(screened_mbs)) %>%
+  select(screened_sc, screened_mbs) %>%
+  table()
