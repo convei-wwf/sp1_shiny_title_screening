@@ -9,6 +9,7 @@ library(tidyverse)
 library(DT)
 library(here)
 library(synthesisr)
+library(tidytext)
 
 roots <- c(wd = here::here()) ### for shinyFileChoose etc
 
@@ -118,6 +119,7 @@ combine_screened <- function(df, files) {
   return(df_out)
 }
 
+<<<<<<< HEAD
 all_df <- read_refs(here('_data/title_screen_sample1000.ris'))
 screened_fs <- list.files(here('_data'), pattern = 'screened_', full.names = TRUE)
 screened_df <- combine_screened(all_df, screened_fs)
@@ -136,3 +138,28 @@ screened_df %>%
   filter(!is.na(screened_sc) & !is.na(screened_mbs)) %>%
   select(screened_sc, screened_mbs) %>%
   table()
+=======
+
+
+### Screening for bigrams in abstract including "sentinel" and "satellite"
+abstr_bigram_df <- read_refs(here('_data/title_screen_sample1000.ris')) %>%
+  select(author, title, abstract) %>%
+  unnest_tokens(output = abstr_sentence, input = abstract, token = 'sentences', drop = FALSE) %>%
+  unnest_tokens(output = abstr_bigram, input = abstr_sentence, token = 'ngrams', n = 2) %>%
+  filter(str_detect(abstr_bigram, '^satellite|^sentinel')) %>%
+  group_by(abstr_bigram) %>%
+  mutate(idf = 1/n_distinct(title)) %>%
+  group_by(author, title, abstract, abstr_bigram) %>%
+  summarize(idf = first(idf), tf = n(), .groups = 'drop') %>%
+  mutate(tf_idf = tf * idf)
+
+title_bigram_df <- read_refs(here('_data/title_screen_sample1000.ris')) %>%
+  select(author, title) %>%
+  unnest_tokens(output = title_bigram, input = title, token = 'ngrams', n = 2, drop = FALSE) %>%
+  filter(str_detect(title_bigram, '^satellite|^sentinel')) %>%
+  group_by(title_bigram) %>%
+  mutate(idf = 1/n_distinct(title)) %>%
+  group_by(author, title, title_bigram) %>%
+  summarize(idf = first(idf), tf = n(), .groups = 'drop') %>%
+  mutate(tf_idf = tf * idf)
+>>>>>>> e57b07ca500b68ff5d1d86f4d3e32a01e5c38f3d
