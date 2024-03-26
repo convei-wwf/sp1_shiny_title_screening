@@ -119,7 +119,6 @@ combine_screened <- function(df, files) {
   return(df_out)
 }
 
-<<<<<<< HEAD
 all_df <- read_refs(here('_data/title_screen_sample1000.ris'))
 screened_fs <- list.files(here('_data'), pattern = 'screened_', full.names = TRUE)
 screened_df <- combine_screened(all_df, screened_fs)
@@ -138,7 +137,6 @@ screened_df %>%
   filter(!is.na(screened_sc) & !is.na(screened_mbs)) %>%
   select(screened_sc, screened_mbs) %>%
   table()
-=======
 
 
 ### Screening for bigrams in abstract including "sentinel" and "satellite"
@@ -162,4 +160,11 @@ title_bigram_df <- read_refs(here('_data/title_screen_sample1000.ris')) %>%
   group_by(author, title, title_bigram) %>%
   summarize(idf = first(idf), tf = n(), .groups = 'drop') %>%
   mutate(tf_idf = tf * idf)
->>>>>>> e57b07ca500b68ff5d1d86f4d3e32a01e5c38f3d
+
+problem_bigrams <- c('sentinel study', 'sentinel node', 'sentinel site', 
+                     'sentinel surve', 'sentinel lymph', 'sentinel pig', 
+                     'sentinel species', 'satellite account', 'sentinel behavior',
+                     'sentinel catalyst', 'satellite office', 'sentinel event') %>%
+  paste(collapse = '|')
+drop_df <- all_df %>%
+  filter(str_detect(tolower(title), problem_bigrams) | str_detect(tolower(abstract), problem_bigrams))
