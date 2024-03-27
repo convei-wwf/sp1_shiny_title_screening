@@ -138,7 +138,13 @@ screened_df %>%
   select(screened_sc, screened_mbs) %>%
   table()
 
-
+screen_to_check_df <- screened_df %>%
+  filter(!is.na(screened_cco2)) %>%
+  filter(!is.na(screened_sc) | !is.na(screened_mbs)) %>%
+  mutate(mismatch = (screened_cco2 != screened_sc | screened_cco2 != screened_mbs)) %>%
+  filter(mismatch) %>%
+  select(author, title, journal, year, abstract, starts_with('screened'))
+  
 ### Screening for bigrams in abstract including "sentinel" and "satellite"
 abstr_bigram_df <- read_refs(here('_data/title_screen_sample1000.ris')) %>%
   select(author, title, abstract) %>%

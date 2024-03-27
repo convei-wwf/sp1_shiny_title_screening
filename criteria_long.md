@@ -2,14 +2,19 @@
 
 An ideal paper would have *valuation* of *EO data* in context of one of the *NASA Applied Science themes* as its stated purpose, and should be set aside for full text screening.  Combinations of one or two of those elements show promise and should be retained for secondary analyses.  A title/abstract that shows none of these elements should be excluded from further investigation.
 
-### A. Valuation of data is explicit goal of document
+### A. Valuation of data is an explicit goal of the study
 
 Title and/or abstract *explicitly* describes purpose as *valuation* of *data* (not necessarily EO data) on some *objective or subjective metric of value*.
 
-* **Valuation** is more than merely comparison or application.  
-    * Comparison may result in an estimate of *relative* value, while application indicates *implicit* value (otherwise the data would not be used), but if that value metric is not explicitly stated, a document should not be included in this criterion.
+* **Rationale:** Many studies and projects apply EO data to understand or achieve some societal benefit.  Many of these studies evaluate an outcome according to some objective or subjective metric of value, e.g., improved crop yields, improved persistence of a threatened species, increased economic efficiency of water management policy.  In such a case, the top-line result likely integrates contributions from many datasets, making it impossible to parse the value contribution of a single dataset (EO or otherwise).  
+
+* A *metric of value* could be economic (e.g., US$), 
+* **Valuation** is more than just application of EO data.  
+    * Application of EO data in pursuit of other goals/insights is quite common.  Application indicates *implicit* value - otherwise the data would not be used!  However, this is not sufficient.  However, if that value metric is not explicitly stated, and an improvement in value due to use of the data
+* **Valuation** is more than just comparison.
     * For example, Howe et al. (2022): *Comparing Sentinel-2 And Landsat 8 For Burn Severity Mapping In Western North America*: this document compares performance of two satellite sources, but the title does not *explicitly* state on what value metric they are being compared (though the abstract may be more informative).
 * Data under valuation need not be EO data nor in a NASA Applied Science context; such methods may still hold promise for application to EO/Applied Sciences.
+* **Rationale:** Valuation of 
 
 ### B. Earth Observation context
 
