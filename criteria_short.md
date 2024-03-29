@@ -1,7 +1,6 @@
-### Criteria:
+* 1. Does the context of the study relate to justice, equity, and/or one of the NASA Applied Science themes?
+* 2. Does the title and/or abstract clearly mention Earth Observation/satellite/remote sensing data?
+* 3a. Does the title and/or abstract explicitly mention valuation of information/data as a primary goal/result?
+* 3b. Does the study apply the valuation methodology to EO information/data?
 
-* **Explicit valuation**: title explicitly describes purpose as valuation of EO data
-* **Earth Observation context**: title explicitly mentions EO data
-* **Societal value context**:  context is relevant to societal value and/or NASA Applied Sciences themes
-* **Spurious/no criteria met**: Does not meet any of the criteria above
-* **Uncertain**: flag for closer inspection of criteria later
+

@@ -1,14 +1,27 @@
 
 server <- shinyServer(function(input, output) {
+  
+  ####################################
+  ###  Set up criteria info page   ###
+  ####################################
+  
+  output$criteria_long <- reactive({
+    f <- switch(input$criteria,
+                chart = 'chart.md',
+                'crit1' = 'crit_1_long.md',
+                'crit2' = 'crit_2_long.md',
+                'crit3' = 'crit_3_long.md')
+    return(markdown(read_file(f)))
+  })
 
+  ####################################
+  ###  Read in bibliography files  ###
+  ####################################
+  
   v <- reactiveValues(bib_all = null_bib,
                       bib_screened = null_bib,
                       bib_toscreen = null_bib,
                       current_doc  = null_bib)
-  
-  ####################################
-  ###  Read in bibliography files  ###
-  ####################################
   
   observeEvent(input$bib_file, {
     message('bib_file observeEvent triggered')

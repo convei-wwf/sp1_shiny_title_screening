@@ -2,9 +2,43 @@ ui <- navbarPage(
   title = "Shiny Title Screening",
   # theme = bslib::bs_theme(bootswatch = 'morph'),
   
+  ### First panel: criteria
+  tabPanel(title = 'Criteria',
+    fluidRow(
+      column(
+        width = 12,
+        h2('Overview'),
+        includeMarkdown('criteria_overview.md')
+      )
+    ),
+    fluidRow(
+      column(
+        width = 4,
+        h3('Criteria'),
+         radioButtons(
+           inputId = 'criteria',
+           label = NULL,
+           choices = c(
+             'Flow chart' = 'chart',
+             '1. Does the context of the study relate to justice, 
+                 equity, and/or one of the NASA Applied Science themes?' = 'crit1', 
+             '2. Does the title and/or abstract clearly mention 
+                 Earth Observation/satellite/remote sensing data?' = 'crit2', 
+             '3a. Does the title and/or abstract explicitly mention 
+                 valuation of information/data as a primary goal/result?' = 'crit3',
+             '3b. Does the study apply the valuation methodology
+                 to EO information/data?' = 'crit3'),
+           selected = 'chart')
+      ),
+      column(
+        width = 8,
+        uiOutput('criteria_long')
+      )
+    )
+  ), ### end tabPanel 2: screening criteria
   
-  # ### First panel: Welcome/introduction
-  tabPanel(title = 'Welcome',
+  ### Second panel: set up data
+  tabPanel(title = 'Setup',
     ### Sidebar with a DT::datatable of the entire bib set?
     fluidRow(
       column(width = 3,
@@ -33,14 +67,6 @@ ui <- navbarPage(
      )
   ), ### end Welcome tabPanel
   
-  ### Second panel: criteria
-  tabPanel(title = 'Criteria',
-    fluidRow(
-      column(width = 2),
-      column(width = 8,
-        includeMarkdown('criteria_long.md'))
-    )
-  ), ### end tabPanel 2: screening criteria
 
   ### Third panel: perform the screening
   tabPanel(title = 'Screening',
@@ -54,11 +80,13 @@ ui <- navbarPage(
         checkboxGroupInput(
           inputId = 'screen_decision',
           label = 'Criteria according to title?:',
-          choices = c('Explicit valuation' = "A",
-                      'Earth Observation context' = 'B',
-                      'Societal value context' = 'C',
-                      'Spurious/no criteria met' = 'D',
-                      'Uncertain how to classify' = 'E'),
+          choices = c('Societal value context' = '1',
+                      'Earth Observation context' = '2',
+                      'Valuation of data' = '3a',
+                      'Valuation of EO data' = '3b',
+                      'No criteria met' = 'X',
+                      'Spurious' = 'S',
+                      'Uncertain how to classify' = 'U'),
           selected = character(0)
           ), ### end of checkboxGroupInput
         textInput(

@@ -77,9 +77,9 @@ append_decision <- function(current_doc, decision, notes, file_select, roots) {
 }
 
 ### stitch a search term string
-esi_terms <- 'satellite|space.based|remote observation|remote sensing|earth observation|remotely.sens[a-z]+|modis|landsat|sentinel'
-dec_terms <- 'decision|optimization|risk analysis|management|policy|cost.benefit analysis|benefit.cost analysis|investment|contingent valuation|counterfactual|value of information'
-value_terms <- 'value|valuation|benefit|utility'
+esi_terms <- 'satellite|space.based|remote(ly)? observ[a-z]+|earth observation|remote(ly)?.sens[a-z]+|modis|landsat|sentinel'
+dec_terms <- 'decision|optimiz[a-z]+|risk analysis|management|policy|cost.benefit analysis|benefit.cost analysis|investment|contingent valuation|counterfactual|value of information'
+value_terms <- 'value[a-z]+|valuation|benefit[a-z]+|utility'
 social_terms <- 'social|societal|cultural|([a-z]+-?)?economic|environmental|ecosystem service|sustainable development|protected area|heritage site|non.?use value'
 appl_sci_terms <- 'capacity.building|climate|resilience|disaster|health|air quality|water|resources|ecolog[a-z]+|conserv[a-z]+|agricultur[a-z]+|wild[a-z]* ?fire'
 
@@ -119,58 +119,73 @@ combine_screened <- function(df, files) {
   return(df_out)
 }
 
-all_df <- read_refs(here('_data/title_screen_sample1000.ris'))
-screened_fs <- list.files(here('_data'), pattern = 'screened_', full.names = TRUE)
-screened_df <- combine_screened(all_df, screened_fs)
-
-screened_df %>%
-  filter(!is.na(screened_cco2) & !is.na(screened_mbs)) %>%
-  select(screened_cco2, screened_mbs) %>%
-  table()
-
-screened_df %>%
-  filter(!is.na(screened_cco2) & !is.na(screened_sc)) %>%
-  select(screened_cco2, screened_sc) %>%
-  table()
-
-screened_df %>%
-  filter(!is.na(screened_sc) & !is.na(screened_mbs)) %>%
-  select(screened_sc, screened_mbs) %>%
-  table()
-
-screen_to_check_df <- screened_df %>%
-  filter(!is.na(screened_cco2)) %>%
-  filter(!is.na(screened_sc) | !is.na(screened_mbs)) %>%
-  mutate(mismatch = (screened_cco2 != screened_sc | screened_cco2 != screened_mbs)) %>%
-  filter(mismatch) %>%
-  select(author, title, journal, year, abstract, starts_with('screened'))
-  
-### Screening for bigrams in abstract including "sentinel" and "satellite"
-abstr_bigram_df <- read_refs(here('_data/title_screen_sample1000.ris')) %>%
-  select(author, title, abstract) %>%
-  unnest_tokens(output = abstr_sentence, input = abstract, token = 'sentences', drop = FALSE) %>%
-  unnest_tokens(output = abstr_bigram, input = abstr_sentence, token = 'ngrams', n = 2) %>%
-  filter(str_detect(abstr_bigram, '^satellite|^sentinel')) %>%
-  group_by(abstr_bigram) %>%
-  mutate(idf = 1/n_distinct(title)) %>%
-  group_by(author, title, abstract, abstr_bigram) %>%
-  summarize(idf = first(idf), tf = n(), .groups = 'drop') %>%
-  mutate(tf_idf = tf * idf)
-
-title_bigram_df <- read_refs(here('_data/title_screen_sample1000.ris')) %>%
-  select(author, title) %>%
-  unnest_tokens(output = title_bigram, input = title, token = 'ngrams', n = 2, drop = FALSE) %>%
-  filter(str_detect(title_bigram, '^satellite|^sentinel')) %>%
-  group_by(title_bigram) %>%
-  mutate(idf = 1/n_distinct(title)) %>%
-  group_by(author, title, title_bigram) %>%
-  summarize(idf = first(idf), tf = n(), .groups = 'drop') %>%
-  mutate(tf_idf = tf * idf)
-
-problem_bigrams <- c('sentinel study', 'sentinel node', 'sentinel site', 
-                     'sentinel surve', 'sentinel lymph', 'sentinel pig', 
-                     'sentinel species', 'satellite account', 'sentinel behavior',
-                     'sentinel catalyst', 'satellite office', 'sentinel event') %>%
-  paste(collapse = '|')
-drop_df <- all_df %>%
-  filter(str_detect(tolower(title), problem_bigrams) | str_detect(tolower(abstract), problem_bigrams))
+# all_df <- read_refs(here('_data/title_screen_sample1000.ris'))
+# screened_fs <- list.files(here('_data'), pattern = 'screened_', full.names = TRUE)
+# 
+# screened_df <- combine_screened(all_df, screened_fs) %>%
+#   select(-doi, -keywords) %>%
+#   setNames(str_remove(names(.), 'screened_'))
+# 
+# abc_df <- screened_df %>% 
+#   select(-cco) %>%
+#   filter(cco2 == 'ABC' | sc == 'ABC' | mbs == 'ABC')
+#   
+# 
+# screened_df %>%
+#   filter(!is.na(cco2) & !is.na(mbs)) %>%
+#   select(cco2, mbs) %>%
+#   table()
+# 
+# screened_df %>%
+#   filter(!is.na(cco2) & !is.na(sc)) %>%
+#   select(cco2, sc) %>%
+#   table()
+# 
+# screened_df %>%
+#   filter(!is.na(sc) & !is.na(mbs)) %>%
+#   select(sc, mbs) %>%
+#   table()
+# 
+# screen_to_check_df <- screened_df %>%
+#   filter(!is.na(screened_cco2)) %>%
+#   filter(!is.na(screened_sc) | !is.na(screened_mbs)) %>%
+#   mutate(mismatch = (screened_cco2 != screened_sc | screened_cco2 != screened_mbs)) %>%
+#   filter(mismatch) %>%
+#   select(author, title, journal, year, abstract, starts_with('screened'))
+#   
+# screen_concur_df <- screened_df %>%
+#   filter(!is.na(screened_cco2)) %>%
+#   filter(!is.na(screened_sc) | !is.na(screened_mbs)) %>%
+#   mutate(match = (screened_cco2 == screened_sc | screened_cco2 == screened_mbs)) %>%
+#   filter(match) %>%
+#   select(author, title, journal, year, abstract, starts_with('screened'))
+# 
+# ### Screening for bigrams in abstract including "sentinel" and "satellite"
+# abstr_bigram_df <- read_refs(here('_data/title_screen_sample1000.ris')) %>%
+#   select(author, title, abstract) %>%
+#   unnest_tokens(output = abstr_sentence, input = abstract, token = 'sentences', drop = FALSE) %>%
+#   unnest_tokens(output = abstr_bigram, input = abstr_sentence, token = 'ngrams', n = 2) %>%
+#   filter(str_detect(abstr_bigram, '^satellite|^sentinel|grace|terra ')) %>%
+#   group_by(abstr_bigram) %>%
+#   mutate(idf = 1/n_distinct(title)) %>%
+#   group_by(author, title, abstract, abstr_bigram) %>%
+#   summarize(idf = first(idf), tf = n(), .groups = 'drop') %>%
+#   mutate(tf_idf = tf * idf)
+# 
+# title_bigram_df <- read_refs(here('_data/title_screen_sample1000.ris')) %>%
+#   select(author, title) %>%
+#   unnest_tokens(output = title_bigram, input = title, token = 'ngrams', n = 2, drop = FALSE) %>%
+#   filter(str_detect(title_bigram, '^satellite|^sentinel|grace|terra ')) %>%
+#   group_by(title_bigram) %>%
+#   mutate(idf = 1/n_distinct(title)) %>%
+#   group_by(author, title, title_bigram) %>%
+#   summarize(idf = first(idf), tf = n(), .groups = 'drop') %>%
+#   mutate(tf_idf = tf * idf)
+# 
+# problem_bigrams <- c('sentinel study', 'sentinel node', 'sentinel site', 
+#                      'sentinel surve', 'sentinel lymph', 'sentinel pig', 
+#                      'sentinel species', 'satellite account', 'sentinel behavior',
+#                      'sentinel catalyst', 'satellite office', 'sentinel event') %>%
+#   paste(collapse = '|')
+# drop_df <- all_df %>%
+#   filter(str_detect(tolower(title), problem_bigrams) | str_detect(tolower(abstract), problem_bigrams))
