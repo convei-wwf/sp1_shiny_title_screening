@@ -120,16 +120,16 @@ combine_screened <- function(df, files) {
 }
 
 # all_df <- read_refs(here('_data/title_screen_sample1000.ris'))
-# screened_fs <- list.files(here('_data'), pattern = 'screened_', full.names = TRUE)
+# screened_fs <- list.files(here('_data/first_round'), pattern = 'screened_', full.names = TRUE)
 # 
 # screened_df <- combine_screened(all_df, screened_fs) %>%
 #   select(-doi, -keywords) %>%
 #   setNames(str_remove(names(.), 'screened_'))
 # 
-# abc_df <- screened_df %>% 
+# abc_df <- screened_df %>%
 #   select(-cco) %>%
 #   filter(cco2 == 'ABC' | sc == 'ABC' | mbs == 'ABC')
-#   
+# 
 # 
 # screened_df %>%
 #   filter(!is.na(cco2) & !is.na(mbs)) %>%
@@ -147,16 +147,16 @@ combine_screened <- function(df, files) {
 #   table()
 # 
 # screen_to_check_df <- screened_df %>%
-#   filter(!is.na(screened_cco2)) %>%
-#   filter(!is.na(screened_sc) | !is.na(screened_mbs)) %>%
-#   mutate(mismatch = (screened_cco2 != screened_sc | screened_cco2 != screened_mbs)) %>%
+#   filter(!is.na(cco2)) %>%
+#   filter(!is.na(sc) | !is.na(mbs)) %>%
+#   mutate(mismatch = (cco2 != sc | cco2 != mbs)) %>%
 #   filter(mismatch) %>%
 #   select(author, title, journal, year, abstract, starts_with('screened'))
-#   
+# 
 # screen_concur_df <- screened_df %>%
-#   filter(!is.na(screened_cco2)) %>%
-#   filter(!is.na(screened_sc) | !is.na(screened_mbs)) %>%
-#   mutate(match = (screened_cco2 == screened_sc | screened_cco2 == screened_mbs)) %>%
+#   filter(!is.na(cco2)) %>%
+#   filter(!is.na(sc) | !is.na(mbs)) %>%
+#   mutate(match = (cco2 == sc | cco2 == mbs)) %>%
 #   filter(match) %>%
 #   select(author, title, journal, year, abstract, starts_with('screened'))
 # 
@@ -182,8 +182,8 @@ combine_screened <- function(df, files) {
 #   summarize(idf = first(idf), tf = n(), .groups = 'drop') %>%
 #   mutate(tf_idf = tf * idf)
 # 
-# problem_bigrams <- c('sentinel study', 'sentinel node', 'sentinel site', 
-#                      'sentinel surve', 'sentinel lymph', 'sentinel pig', 
+# problem_bigrams <- c('sentinel study', 'sentinel node', 'sentinel site',
+#                      'sentinel surve', 'sentinel lymph', 'sentinel pig',
 #                      'sentinel species', 'satellite account', 'sentinel behavior',
 #                      'sentinel catalyst', 'satellite office', 'sentinel event') %>%
 #   paste(collapse = '|')
