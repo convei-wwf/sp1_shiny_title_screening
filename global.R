@@ -52,8 +52,7 @@ append_decision <- function(current_doc, decision, notes, file_select, roots) {
   current_doc <- current_doc %>%
     select(source_type, author, title, journal, year)
   ### collapse decision criteria letters to a single block; if none selected, assign "unsure"
-  if(length(decision) == 0) decision <- 'E'
-  decision <- paste0(decision, collapse = '')
+  if(length(decision) == 0) decision <- '?'
   
   out_ris <- write_refs(current_doc, format = 'ris', file = FALSE) %>%
     paste0(collapse = '\n') %>%
@@ -101,6 +100,16 @@ embolden <- function(text, terms = search_terms) {
     str_replace_all('<strong>', '<strong style="color:#FF0000";>')
   return(text_out)
 }
+
+summarize_checks <- function(checkboxes) {
+  sum_df <- checkboxes %>%
+    mutate(out = case_when(!is.na(U) ~ '?',
+                           !is.na(N) ~ 'N',
+                           !is.na(Y) ~ 'Y',
+                           TRUE ~ '_'))
+  out_string <- paste(sum_df$out, collapse = '')
+}
+
 
 combine_screened <- function(df, files) {
   for(f in files) {

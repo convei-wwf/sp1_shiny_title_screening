@@ -64,6 +64,48 @@ server <- shinyServer(function(input, output) {
   })
   
   
+  #####################################
+  ###  Set up screening checkboxes  ###
+  #####################################
+  
+  ### The proxy to update the DT
+  proxy <- dataTableProxy('crit_table')
+  
+  #The initial data for the checkboxes
+  checkboxes <- data.frame(
+    Y = c(NA, NA, NA, NA, NA),
+    N = c(NA, NA, NA, NA, NA),
+    U = c(NA, NA, NA, NA, NA),
+    row.names = paste('Crit. ', c('1', '2', '3a', '3b', '3c'))
+  )
+  
+  ### The reactive version of the data
+  tableData = reactiveValues(checkboxes = checkboxes)
+  
+  ### Update the table when clicked
+  observeEvent(req(input$crit_table_cells_selected), {
+    tableData$checkboxes[input$crit_table_cells_selected] =
+      ifelse(is.na(tableData$checkboxes[input$crit_table_cells_selected]),
+             as.character(icon("ok", lib = "glyphicon")), NA)
+    
+    ### Send proxy (no need to refresh whole table)
+    replaceData(proxy, tableData$checkboxes)
+    
+  })
+  
+  ### The "checkbox" table
+  output$crit_table = renderDataTable({
+    checkboxes
+  }, 
+    ### These are options to make the table look like checkboxes
+    selection = list(mode = "single", target = 'cell'), 
+    options = list(
+      columnDefs = list(list(className = 'dt-center', targets = "_all")),
+      dom = "t", ordering = F
+    ),
+    escape = F
+  )
+
   ###################################
   ###  Screen and update output   ###
   ###################################
@@ -91,24 +133,30 @@ server <- shinyServer(function(input, output) {
     v$current_doc <- v$bib_toscreen %>%
       slice(1)
   })
+
   
   
   observeEvent(input$screen_action, {
     message('in screen_action observeEvent')
-    if(length(input$screen_decision) == 0) {
+    
+    check_df <- tableData$checkboxes
+    if(sum(!is.na(check_df)) == 0) {
       message('No decision selected! (zero length)')
       return(NULL)
     }
-    if(is.null(input$screen_decision)) {
-      message('No decision selected! (null)')
-      return(NULL)
-    }
-    ### Translate current doc to RIS and add in a PA (personal note) field with the screening decision
-    append_decision(v$current_doc, input$screen_decision, input$notes, input$screened_file, roots)
+    
+    ### Translate current doc to RIS and add in a PA (personal note) 
+    ### field with the screening decision
+    checkbox_summary <- summarize_checks(check_df)
+    append_decision(v$current_doc, checkbox_summary, input$notes, 
+                    file_select = input$screened_file, roots = roots)
 
-    ### update the checkbox input and text input to blank out selections
-    updateCheckboxGroupInput(inputId = 'screen_decision', selected = character(0))
+    ### clear checkboxes and text input to blank out selections
+    tableData$checkboxes <- checkboxes
+    replaceData(proxy, tableData$checkboxes)
+    
     updateTextInput(inputId = 'notes', value = '')
+    
     ### drop the current first row from the bib_toscreen
     v$bib_toscreen <- v$bib_toscreen %>%
       slice(-1)
@@ -118,10 +166,11 @@ server <- shinyServer(function(input, output) {
   })
   
   output$doc_fields_text <- renderUI({
-    # browser()
-    ### output to display selected doc for screening: highlight search terms in title and abstract
+    ### output to display selected doc for screening: highlight search terms 
+    ### in title and abstract
     
-    ## clean up title; if all caps or all lower case, convert to sentence, then embolden it
+    ### clean up title; if all caps or all lower case, convert to sentence, 
+    ### then embolden it
     title <- v$current_doc$title %>% str_remove_all('\\{|\\}')
     if(title == toupper(title) | title == tolower(title)) title <- str_to_sentence(title)
     title_out <- embolden(text = title) %>%

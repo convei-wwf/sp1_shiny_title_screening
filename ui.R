@@ -77,21 +77,22 @@ ui <- navbarPage(
     sidebarLayout(
       sidebarPanel(
         includeMarkdown('criteria_short.md'),
-
+        
+        dataTableOutput('crit_table'),
         ### Radio buttons for categorization
-        checkboxGroupInput(
-          inputId = 'screen_decision',
-          label = 'Criteria according to title?:',
-          choices = c('Societal value context' = '1',
-                      'Earth Observation context' = '2',
-                      'Valuation' = '3a',
-                      'Valuation of data' = '3b',
-                      'Valuation of specific EO data' = '3c',
-                      'No criteria met' = 'X',
-                      'Spurious' = 'S',
-                      'Uncertain how to classify' = 'U'),
-          selected = character(0)
-          ), ### end of checkboxGroupInput
+        # checkboxGroupInput(
+        #   inputId = 'screen_decision',
+        #   label = 'Criteria according to title?:',
+        #   choices = c('Societal value context' = '1',
+        #               'Earth Observation context' = '2',
+        #               'Valuation' = '3a',
+        #               'Valuation of data' = '3b',
+        #               'Valuation of specific EO data' = '3c',
+        #               'No criteria met' = 'X',
+        #               'Spurious' = 'S',
+        #               'Uncertain how to classify' = 'U'),
+        #   selected = character(0)
+        #   ), ### end of checkboxGroupInput
         textInput(
           inputId = 'notes',
           label = 'Notes:',
