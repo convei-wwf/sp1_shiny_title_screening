@@ -10,8 +10,11 @@ server <- shinyServer(function(input, output) {
                 chart = 'chart.md',
                 'crit1' = 'crit_1_long.md',
                 'crit2' = 'crit_2_long.md',
-                'crit3' = 'crit_3_long.md')
-    return(markdown(read_file(f)))
+                'crit3a' = c('crit_3_long.md', 'crit_3a_long.md'),
+                'crit3b' = c('crit_3_long.md', 'crit_3b_long.md'),
+                'crit3c' = c('crit_3_long.md', 'crit_3c_long.md'))
+  md <- sapply(f, read_file) %>% paste(collapse = '\n\n')
+    return(markdown(md))
   })
 
   ####################################
@@ -117,14 +120,30 @@ server <- shinyServer(function(input, output) {
   output$doc_fields_text <- renderUI({
     # browser()
     ### output to display selected doc for screening: highlight search terms in title and abstract
-    title <- v$current_doc$title %>% str_to_sentence() %>% str_remove_all('\\{|\\}')
+    
+    ## clean up title; if all caps or all lower case, convert to sentence, then embolden it
+    title <- v$current_doc$title %>% str_remove_all('\\{|\\}')
+    if(title == toupper(title) | title == tolower(title)) title <- str_to_sentence(title)
     title_out <- embolden(text = title) %>%
       str_replace_all('p>', 'h3>') ### turn into a header instead of paragraph
 
-    author <- v$current$author %>% str_to_title() %>% markdown()
+    ### clean up doi for inclusion as a link
+    doi <- v$current_doc$doi
+    if(is.na(doi)) {
+      doi <- ''
+    } else {
+      doi <- sprintf('<a href="%s">%s</a>', doi, doi)
+    }
+    
+    ### Clean up author and journal
+    author <- v$current_doc$author %>% str_to_title() %>% markdown()
     journal <- v$current_doc$journal %>% str_to_title() %>% markdown()
+    
+    ### embolden the abstract
     abstract <- embolden(text = v$current_doc$abstract)
-    html_out <- paste(title_out, '<hr>', author, journal, '<hr>', abstract)
+    
+    ### combine it all together!
+    html_out <- paste(title_out, '<hr>', author, journal, doi, '<hr>', abstract)
     return(HTML(html_out))
   })
   

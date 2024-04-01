@@ -24,11 +24,13 @@ ui <- navbarPage(
                  equity, and/or one of the NASA Applied Science themes?' = 'crit1', 
              '2. Does the title and/or abstract clearly mention 
                  Earth Observation/satellite/remote sensing data?' = 'crit2', 
-             '3a. Does the title and/or abstract explicitly mention 
-                 valuation of information/data as a primary goal/result?' = 'crit3',
-             '3b. Does the study apply the valuation methodology
-                 to EO information/data?' = 'crit3'),
-           selected = 'chart')
+             '3a. Does the title and/or abstract describe valuation of a societal
+                 benefit as a primary goal or result?' = 'crit3a',
+             '3b. Does the title and/or abstract indicate that the valuation is 
+                 attributable to a dataset or data source?' = 'crit3b',
+             '3c. Does the study apply the valuation methodology to a specific
+                 EO dataset or data source?' = 'crit3c'),
+        selected = 'chart')
       ),
       column(
         width = 8,
@@ -82,8 +84,9 @@ ui <- navbarPage(
           label = 'Criteria according to title?:',
           choices = c('Societal value context' = '1',
                       'Earth Observation context' = '2',
-                      'Valuation of data' = '3a',
-                      'Valuation of EO data' = '3b',
+                      'Valuation' = '3a',
+                      'Valuation of data' = '3b',
+                      'Valuation of specific EO data' = '3c',
                       'No criteria met' = 'X',
                       'Spurious' = 'S',
                       'Uncertain how to classify' = 'U'),

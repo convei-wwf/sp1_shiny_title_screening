@@ -18,7 +18,7 @@ clean_bib <- function(bib_df, ext = '.ris') {
 
   bib_clean_df <- bib_df %>%
     janitor::clean_names() %>%
-    select(source_type, author, title, journal, year, abstract) %>%
+    select(source_type, author, title, journal, year, abstract, doi) %>%
     ### select the first author last name only
     mutate(author = str_remove_all(author, ',.+')) %>%
     # rename(first_author = author) %>%
@@ -83,7 +83,7 @@ value_terms <- 'value[a-z]+|valuation|benefit[a-z]+|utility'
 social_terms <- 'social|societal|cultural|([a-z]+-?)?economic|environmental|ecosystem service|sustainable development|protected area|heritage site|non.?use value'
 appl_sci_terms <- 'capacity.building|climate|resilience|disaster|health|air quality|water|resources|ecolog[a-z]+|conserv[a-z]+|agricultur[a-z]+|wild[a-z]* ?fire'
 
-search_terms <- paste(esi_terms, dec_terms, value_terms, social_terms, sep = '|')
+search_terms <- paste(esi_terms, dec_terms, value_terms, social_terms, appl_sci_terms, sep = '|')
 
 embolden <- function(text, terms = search_terms) {
   indices <- str_locate_all(tolower(text), terms) 
@@ -91,7 +91,8 @@ embolden <- function(text, terms = search_terms) {
   indices[[1]][ , 2] <- indices[[1]][ , 2] + 1
   ### set up as vector and go from the end to the start!
   i_vec <- indices %>% unlist() %>% sort(decreasing = TRUE)
-  text_sub <- str_to_sentence(text)
+  # text_sub <- str_to_sentence(text)
+  text_sub <- text
   for(i in i_vec) {
     ### i <- 7
     stringi::stri_sub(text_sub, i, i-1) <- '**'
@@ -119,7 +120,7 @@ combine_screened <- function(df, files) {
   return(df_out)
 }
 
-# all_df <- read_refs(here('_data/title_screen_sample1000.ris'))
+# all_df <- read_refs(here('_data/sample1000.ris'))
 # screened_fs <- list.files(here('_data/first_round'), pattern = 'screened_', full.names = TRUE)
 # 
 # screened_df <- combine_screened(all_df, screened_fs) %>%
