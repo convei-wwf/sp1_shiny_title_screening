@@ -15,20 +15,20 @@ ui <- navbarPage(
       column(
         width = 4,
         h3('Criteria'),
-         radioButtons(
-           inputId = 'criteria',
-           label = NULL,
-           choices = c(
-             'Flow chart' = 'chart',
-             '1. Does the context of the study relate to justice, 
+        radioButtons(
+          inputId = 'criteria',
+          label = 'For more details on criteria, choose one:',
+          choices = c(
+            'Flow chart' = 'chart',
+            '1.  Does the context of the study relate to justice, 
                  equity, and/or one of the NASA Applied Science themes?' = 'crit1', 
-             '2. Does the title and/or abstract clearly mention 
-                 Earth Observation/satellite/remote sensing data?' = 'crit2', 
-             '3a. Does the title and/or abstract describe valuation of a societal
+            '2.  Does the title and/or abstract clearly mention 
+                 Earth Observation, satellite, or remote sensing data?' = 'crit2', 
+            '3a. Does the title and/or abstract describe valuation of a societal
                  benefit as a primary goal or result?' = 'crit3a',
-             '3b. Does the title and/or abstract indicate that the valuation is 
+            '3b. Does the title and/or abstract indicate that the valuation is 
                  attributable to a dataset or data source?' = 'crit3b',
-             '3c. Does the study apply the valuation methodology to a specific
+            '3c. Does the study apply the valuation methodology to a specific
                  EO dataset or data source?' = 'crit3c'),
         selected = 'chart')
       ),
