@@ -76,7 +76,7 @@ append_decision <- function(current_doc, decision, notes, file_select, roots) {
 }
 
 ### stitch a search term string
-esi_terms <- 'satellite|space.based|remote(ly)? observ[a-z]+|earth observation|remote(ly)?.sens[a-z]+|modis|landsat|sentinel'
+esi_terms <- 'satellite|space.based|remote(ly)? observ[a-z]+|earth observation|remote(ly)?.sens[a-z]+|modis|landsat|sentinel|grace|terra'
 dec_terms <- 'decision|optimiz[a-z]+|risk analysis|management|policy|cost.benefit analysis|benefit.cost analysis|investment|contingent valuation|counterfactual|value of information'
 value_terms <- 'value[a-z]+|valuation|benefit[a-z]+|utility'
 social_terms <- 'social|societal|cultural|([a-z]+-?)?economic|environmental|ecosystem service|sustainable development|protected area|heritage site|non.?use value'
@@ -103,9 +103,9 @@ embolden <- function(text, terms = search_terms) {
 
 summarize_checks <- function(checkboxes) {
   sum_df <- checkboxes %>%
-    mutate(out = case_when(!is.na(U) ~ '?',
-                           !is.na(N) ~ 'N',
-                           !is.na(Y) ~ 'Y',
+    mutate(out = case_when(!is.na(U) ~ '?', ### if at all uncertain, keep (conservative)
+                           !is.na(Y) ~ 'Y', ### if values include both Y and N, keep (conservative)
+                           !is.na(N) ~ 'N', ### if definitive N, exclude
                            TRUE ~ '_'))
   out_string <- paste(sum_df$out, collapse = '')
 }

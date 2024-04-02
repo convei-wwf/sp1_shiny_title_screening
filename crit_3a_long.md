@@ -1,4 +1,4 @@
-**Screening question 3a: Does the title and/or abstract describe valuation of a societal benefit as a primary goal or result?**
+**Screening question 3a: Does the title and/or abstract describe valuation of some societal benefit as a primary goal or result?**
 
 **Includes:**
 
