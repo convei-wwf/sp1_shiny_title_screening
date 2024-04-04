@@ -31,6 +31,9 @@ server <- shinyServer(function(input, output) {
     shinyFileChoose(input, 'bib_file', roots = roots, filetypes=c('', 'txt', 'bib', 'ris'),
                     defaultPath='', defaultRoot='wd')
     v$bib_all <- import_refs(input$bib_file, roots)
+    v$bib_toscreen <- v$bib_all
+    v$current_doc <- v$bib_toscreen %>%
+      slice(1)
     print(head(v$bib_all))
   })
     
@@ -172,7 +175,9 @@ server <- shinyServer(function(input, output) {
     ### clean up title; if all caps or all lower case, convert to sentence, 
     ### then embolden it
     title <- v$current_doc$title %>% str_remove_all('\\{|\\}')
-    if(title == toupper(title) | title == tolower(title)) title <- str_to_sentence(title)
+    if(title == toupper(title) | title == tolower(title)) {
+      title <- str_to_sentence(title)
+    }
     title_out <- embolden(text = title) %>%
       str_replace_all('p>', 'h3>') ### turn into a header instead of paragraph
 
