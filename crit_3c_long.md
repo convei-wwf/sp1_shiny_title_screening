@@ -1,4 +1,4 @@
-**Screening question 3c: Does the study apply the valuation methodology specifically to an EO dataset or data source?**
+**Screening question 3c: Does the study apply the valuation methodology specifically to an EO-relevant dataset or data source?**
 
 **Includes:**
 

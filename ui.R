@@ -24,12 +24,14 @@ ui <- navbarPage(
                  equity, and/or one of the NASA Applied Science themes?' = 'crit1', 
             '2.  Does the title and/or abstract clearly mention 
                  Earth Observation, satellite, or remote sensing data?' = 'crit2', 
-            '3a. Does the title and/or abstract describe valuation of a societal
-                 benefit as a primary goal or result?' = 'crit3a',
-            '3b. Does the title and/or abstract indicate that the valuation is 
-                 attributable to a dataset or data source?' = 'crit3b',
-            '3c. Does the study apply the valuation methodology to a specific
-                 EO dataset or data source?' = 'crit3c'),
+            '3a. Does the title and/or abstract indicate that the study 
+                 assesses/measures the value of a societal benefit in economic terms 
+                 (e.g., monetary value) or utility (e.g., benefit for a defined user(s), 
+                 purpose, or decision), as a primary goal or result?' = 'crit3a',
+            '3b. Does the title and/or abstract attribute/link the benefit/value to the
+                 application/use of a specific dataset or data source?' = 'crit3b',
+            '3c. Does the study apply the valuation methodology specifically to an 
+                 EO-relevant dataset or data source?' = 'crit3c'),
         selected = 'chart')
       ),
       column(
