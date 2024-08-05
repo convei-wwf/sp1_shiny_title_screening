@@ -13,7 +13,7 @@ server <- shinyServer(function(input, output) {
                 'crit3a' = c('crit_3_long.md', 'crit_3a_long.md'),
                 'crit3b' = c('crit_3_long.md', 'crit_3b_long.md'),
                 'crit3c' = c('crit_3_long.md', 'crit_3c_long.md'))
-  md <- sapply(f, read_file) %>% paste(collapse = '\n\n')
+    md <- sapply(f, read_file) %>% paste(collapse = '\n\n')
     return(markdown(md))
   })
 
